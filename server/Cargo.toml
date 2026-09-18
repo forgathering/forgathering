@@ -8,3 +8,4 @@ sqlx = "0.9.0"
 actix-web = { version = "4" }
 actix-cors = "0.7"
 tokio-tungstenite = "0.30"
+include_directory = "0.1.1"

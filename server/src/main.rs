@@ -1,27 +1,12 @@
-use actix_web::{App, HttpResponse, HttpServer, Responder, get};
+pub mod web_server;
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body(
-        "
-    <!DOCTYPE html>
-    <html lang=\"en\">
-    <head>
-        <meta charset=\"UTF-8\">
-        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-        <title>forgather</title>
-    </head>
-    <body>
-        <h1>hi... #hitwt</h1>
-    </body>
-    </html>
-    ",
-    )
-}
+use actix_web::{App, HttpServer};
+
+use crate::web_server::serve;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().service(hello))
+    HttpServer::new(|| App::new().service(serve))
         .bind(("0.0.0.0", 3000))?
         .run()
         .await
