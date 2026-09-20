@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = [
+members = ["database",
 	"protocol",
     "server",
 ]
@@ -15,11 +15,9 @@ edition = "2024"
 log = { version = "0.4", features = ["max_level_debug", "release_max_level_info"] }
 tokio = { version = "1", features = ["full"] }
 tokio-stream = "0.1"
-serde = "1"
+serde = { version = "1", features = ["derive"] }
 thiserror = "2"
 base64 = "0.23"
-ts-rs = "12"
-utoipa = "5"
 
 [workspace.lints.rust]
 async_fn_in_trait = "allow"
@@ -42,4 +40,5 @@ too_many_lines = "allow"
 # Give me the best optimizations you've got, Rust
 [profile.release]
 codegen-units = 1
+# lto = true
 opt-level = 3

@@ -5,7 +5,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
 
     flake-utils.url = "github:numtide/flake-utils";
-
   };
 
   outputs = {
@@ -18,7 +17,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
       in {
         packaes = {
-          # deck-application = pkgs.callPackage ./package.nix {};
+          # forgathering = pkgs.callPackage ./package.nix {};
         };
 
         devShells.default = rec {

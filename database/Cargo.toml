@@ -1,0 +1,15 @@
+[package]
+name = "database"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+log.workspace = true
+thiserror.workspace = true
+serde.workspace = true
+sqlx = { version = "0.9", features = [ "runtime-tokio", "tls-native-tls", "postgres", "sqlite", "any", "migrate", "derive" ] }
+crypto = { version = "0.5.1", features = [ "password-hash" ] }
+argon2 = "0.6"
+
+[lints]
+workspace = true

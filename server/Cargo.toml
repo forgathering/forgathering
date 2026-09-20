@@ -4,8 +4,23 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-sqlx = "0.9.0"
+log.workspace = true
+thiserror.workspace = true
+serde.workspace = true
+database = { path = "../database" }
+tui_setup_wizard = "0.1"
+fern = { version = "0.7", features = [ "colored" ] }
+serde_json = "1"
+toml = "1.1.6"
 actix-web = { version = "4" }
 actix-cors = "0.7"
 tokio-tungstenite = "0.30"
 include_directory = "0.1.1"
+clap = { version = "4.6.7", features = ["derive"] }
+humantime = "2.4.0"
+color-eyre = "0.6.5"
+ts-rs = "12"
+utoipa = "5"
+
+[features]
+debug_log = []
