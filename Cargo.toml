@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["database",
+members = ["auth","database",
 	"protocol",
     "server",
 ]
@@ -12,11 +12,13 @@ version = "0.0.1"
 edition = "2024"
 
 [workspace.dependencies]
+time = { version = "0.3.55", features = ["serde"] }
 log = { version = "0.4", features = ["max_level_debug", "release_max_level_info"] }
 tokio = { version = "1", features = ["full"] }
 tokio-stream = "0.1"
 serde = { version = "1", features = ["derive"] }
 thiserror = "2"
+uuid = { version = "1.26.1", features = ["v7", "serde"] }
 base64 = "0.23"
 
 [workspace.lints.rust]

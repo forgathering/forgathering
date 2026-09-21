@@ -1,16 +1,17 @@
 [package]
-name = "database"
+name = "auth"
 version.workspace = true
 edition.workspace = true
 
 [dependencies]
-time.workspace = true
 log.workspace = true
 thiserror.workspace = true
 serde.workspace = true
 uuid.workspace = true
-auth = { path = "../auth" }
-sqlx = { version = "0.9", features = [ "runtime-tokio", "tls-native-tls", "postgres", "sqlite", "any", "migrate", "derive" ] }
+base64.workspace = true
+argon2 = "0.6"
+jsonwebtoken = "11.1"
+rand = { version = "0.10.3", features = ["chacha"] }
 
 [lints]
 workspace = true

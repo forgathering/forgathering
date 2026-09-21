@@ -7,6 +7,7 @@ edition = "2024"
 log.workspace = true
 thiserror.workspace = true
 serde.workspace = true
+auth = { path = "../auth" }
 database = { path = "../database" }
 tui_setup_wizard = "0.1"
 fern = { version = "0.7", features = [ "colored" ] }
@@ -21,6 +22,7 @@ humantime = "2.4.0"
 color-eyre = "0.6.5"
 ts-rs = "12"
 utoipa = "5"
+regex = "1.13.1"
 
 [features]
 debug_log = []

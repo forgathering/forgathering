@@ -7,6 +7,7 @@ pub mod web_server;
 use std::path::PathBuf;
 
 use actix_web::{App, HttpServer, web};
+use auth::{AuthEngine, StartAuthError};
 use clap::Parser;
 use database::{Database, OpenDatabaseError};
 use thiserror::Error;
@@ -34,6 +35,9 @@ enum ServerError {
 
     #[error("Failed to start logger: {0}")]
     StartLogger(#[from] fern::InitError),
+
+    #[error("Failed to start auth engine: {0}")]
+    StartAuth(#[from] StartAuthError),
 
     #[error("Failed to open database: {0}")]
     OpenDatabase(#[from] OpenDatabaseError),
@@ -65,14 +69,16 @@ async fn main() -> Result<(), ServerError> {
 
     setup_logger(config.logging)?;
 
+    let auth_engine = AuthEngine::open(config.auth)?;
     let database = Database::open(config.database).await?;
 
     HttpServer::new(move || {
         App::new()
+            .app_data(web::Data::new(auth_engine.clone()))
             .app_data(web::Data::new(database.clone()))
             .service(serve)
     })
-    .bind(("0.0.0.0", config.port))?
+    .bind((config.ip, config.port))?
     .run()
     .await?;
 

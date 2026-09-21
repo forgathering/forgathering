@@ -3,13 +3,18 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use auth::config::AuthConfig;
 use database::config::DatabaseConfig;
+use regex::regex;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tui_setup_wizard::{SetupWizard, SetupWizardAnswer, SetupWizardStep};
 
 use crate::logger::LoggingConfig;
 
+fn default_ip() -> String {
+    "0.0.0.0".to_string()
+}
 fn default_port() -> u16 {
     3000
 }
@@ -20,6 +25,10 @@ pub struct ServerConfig {
 
     pub database: DatabaseConfig,
 
+    pub auth: AuthConfig,
+
+    #[serde(default = "default_ip")]
+    pub ip: String,
     #[serde(default = "default_port")]
     pub port: u16,
 }
@@ -32,11 +41,14 @@ impl Default for ServerConfig {
                 stdio: true,
             },
 
+            auth: AuthConfig::default(),
+
             database: DatabaseConfig::Sqlite {
                 path: PathBuf::from("./database.db"),
             },
 
-            port: 3000,
+            ip: default_ip(),
+            port: default_port(),
         }
     }
 }
@@ -155,6 +167,19 @@ pub fn interactive_configure(path: &Path) -> Result<(), ConfigError> {
             })
             .build(),
         SetupWizardStep::info("Web Server").build(),
+        SetupWizardStep::text("Listening IP:")
+            .with_default_value("0.0.0.0")
+            // https://stackoverflow.com/questions/5284147/validating-ipv4-addresses-with-regexp
+            .validate_using(
+                |ip| {
+                    regex!(r"^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$").is_match(ip)
+                },
+                "Listening IP must be a valid IPv4 address",
+            )
+            .apply_using(|config: &mut ServerConfig, ip| {
+                config.ip = ip.clone();
+            })
+            .build(),
         SetupWizardStep::unsigned_number("Port:")
             .with_default_value(3000)
             .validate_using(|number| *number >= 1, "Ports must be between 1 and 65535")
