@@ -17,6 +17,7 @@ log = { version = "0.4", features = ["max_level_debug", "release_max_level_info"
 tokio = { version = "1", features = ["full"] }
 tokio-stream = "0.1"
 serde = { version = "1", features = ["derive"] }
+utoipa = { version = "5", features = ["actix_extras", "time", "uuid"] }
 thiserror = "2"
 uuid = { version = "1.26.1", features = ["v7", "serde"] }
 base64 = "0.23"

@@ -11,11 +11,15 @@ use auth::{AuthEngine, StartAuthError};
 use clap::Parser;
 use database::{Database, OpenDatabaseError};
 use thiserror::Error;
+use utoipa::openapi::{ContactBuilder, InfoBuilder};
+use utoipa_actix_web::AppExt;
+use utoipa_swagger_ui::SwaggerUi;
 
 use crate::{
+    api::{api_docs_json, mount_api},
     config::{ConfigError, open_or_interactive_configure},
     logger::setup_logger,
-    web_server::serve,
+    web_server::{not_found, serve},
 };
 
 #[derive(Parser, Debug)]
@@ -73,10 +77,31 @@ async fn main() -> Result<(), ServerError> {
     let database = Database::open(config.database).await?;
 
     HttpServer::new(move || {
-        App::new()
+        let (builder, mut spec) = App::new()
             .app_data(web::Data::new(auth_engine.clone()))
             .app_data(web::Data::new(database.clone()))
+            .into_utoipa_app()
+            .service(mount_api())
+            .split_for_parts();
+
+        spec.info = InfoBuilder::new()
+            .title("Forgathering API")
+            .contact(Some(
+                ContactBuilder::new()
+                    .name(Some("FizzyApple12".to_string()))
+                    .url(Some("forgather.ing".to_string()))
+                    .email(Some("forgathering@fizzyapple12.com".to_string()))
+                    .build(),
+            ))
+            .version(env!("CARGO_PKG_VERSION").to_string())
+            .build();
+
+        builder
+            .app_data(web::Data::new(spec.clone()))
+            .service(api_docs_json)
+            .service(SwaggerUi::new("/docs/{_:.*}").url("/openapi.json", spec))
             .service(serve)
+            .default_service(web::to(not_found))
     })
     .bind((config.ip, config.port))?
     .run()
