@@ -20,7 +20,7 @@
           # forgathering = pkgs.callPackage ./package.nix {};
         };
 
-        devShells.default = rec {
+        devShells.default = pkgs.mkShell rec {
           buildInputs = [
             pkgs.systemd
             pkgs.openssl
@@ -37,6 +37,11 @@
             pkgs.llvmPackages.bintools
 
             pkgs.yaml-language-server
+
+            pkgs.pnpm
+            pkgs.nodejs
+            pkgs.astro-language-server
+            pkgs.tailwindcss-language-server
           ];
 
           RUSTC_VERSION = "nightly-2026-07-19";
@@ -46,14 +51,6 @@
           shellHook = ''
             export PATH=$PATH:''${CARGO_HOME:-~/.cargo}/bin
             export PATH=$PATH:''${RUSTUP_HOME:-~/.rustup}/toolchains/$RUSTC_VERSION-x86_64-unknown-linux-gnu/bin/
-
-            flashImage() {
-              if [ "$#" -eq 0 ]; then
-                echo "Please Specify a Block Device to Flash";
-              else
-                zstdcat result/sd-image/nixos-image-rpi5-kernel.img.zst | sudo dd of=$1 bs=100M status=progress
-              fi
-            }
           '';
 
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (buildInputs ++ nativeBuildInputs);

@@ -8,6 +8,7 @@ use uuid::Uuid;
 #[derive(Serialize, Deserialize, Clone, Debug, FromRow)]
 pub struct User {
     pub id: Uuid,
+
     pub created_at: OffsetDateTime,
 
     pub username: String,
@@ -15,10 +16,13 @@ pub struct User {
     pub email: String,
     pub password_hash: String,
 
-    pub avatar: Vec<u8>,
+    pub avatar: Option<Vec<u8>>,
     pub bio: String,
     pub links: Vec<String>,
-    pub following: Vec<Uuid>,
+
+    pub users_followed: Vec<Uuid>,
+
+    pub collections_followed: Vec<Uuid>,
 
     pub landing_page: String,
     pub show_nsfw: bool,
@@ -35,12 +39,15 @@ impl User {
             email,
             password_hash,
 
-            avatar: Vec::new(),
+            avatar: None,
             bio: String::new(),
             links: Vec::new(),
-            following: Vec::new(),
 
-            landing_page: String::new(),
+            users_followed: Vec::new(),
+
+            collections_followed: Vec::new(),
+
+            landing_page: "/".to_string(),
             show_nsfw: false,
         }
     }
@@ -49,5 +56,6 @@ impl User {
 #[derive(Serialize, Deserialize, Clone, Debug, FromRow)]
 pub struct ExternalUser {
     pub id: Uuid,
+
     pub server: String,
 }

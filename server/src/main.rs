@@ -21,7 +21,7 @@ use crate::{
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct ServerArgs {
-    #[arg(short, long, default_value = "./config.toml")]
+    #[arg(short, long, default_value = "./forgathering.toml")]
     config: PathBuf,
 }
 

@@ -7,7 +7,7 @@ use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Clone, Debug, FromRow)]
 pub struct Session {
-    pub session_id: Uuid,
+    pub id: Uuid,
     pub user_id: Uuid,
 
     pub expires_at: OffsetDateTime,
@@ -16,7 +16,7 @@ pub struct Session {
 impl Session {
     pub fn new(user_id: Uuid) -> Self {
         Self {
-            session_id: Uuid::now_v7(),
+            id: Uuid::now_v7(),
             user_id,
             expires_at: OffsetDateTime::from(SystemTime::now() + Duration::from_days(3)),
         }

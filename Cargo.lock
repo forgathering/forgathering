@@ -2302,6 +2302,16 @@ dependencies = [
 [[package]]
 name = "protocol"
 version = "0.0.1"
+dependencies = [
+ "auth",
+ "base64 0.23.1",
+ "log",
+ "serde",
+ "thiserror 2.0.20",
+ "time",
+ "ts-rs",
+ "uuid",
+]
 
 [[package]]
 name = "quote"
@@ -2672,7 +2682,6 @@ dependencies = [
  "thiserror 2.0.20",
  "tokio-tungstenite",
  "toml",
- "ts-rs",
  "tui_setup_wizard",
  "utoipa",
 ]
@@ -3444,6 +3453,7 @@ checksum = "756050066659291d47a554a9f558125db17428b073c5ffce1daf5dcb0f7231d8"
 dependencies = [
  "thiserror 2.0.20",
  "ts-rs-macros",
+ "uuid",
 ]
 
 [[package]]

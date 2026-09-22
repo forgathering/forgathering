@@ -1,7 +1,7 @@
 #![feature(duration_constructors)]
 
-pub mod auth_token;
 pub mod config;
+pub mod session_token;
 
 use argon2::{Argon2, Params, PasswordHash, PasswordHasher, PasswordVerifier, password_hash};
 use base64::{Engine, engine::general_purpose};
@@ -10,8 +10,8 @@ use thiserror::Error;
 use uuid::Uuid;
 
 use crate::{
-    auth_token::{AuthToken, AuthTokenClaims, AuthTokenError},
     config::AuthConfig,
+    session_token::{SessionToken, SessionTokenClaims, SessionTokenError},
 };
 
 #[derive(Clone)]
@@ -86,18 +86,18 @@ impl AuthEngine<'_> {
         &self,
         session_id: Uuid,
         user_id: Uuid,
-    ) -> Result<AuthToken, AuthTokenError> {
-        AuthToken::create(session_id, user_id, &self.jwt_secret)
+    ) -> Result<SessionToken, SessionTokenError> {
+        SessionToken::create(session_id, user_id, &self.jwt_secret)
     }
 
     pub fn get_auth_token_data(
         &self,
-        token: &AuthToken,
-    ) -> Result<TokenData<AuthTokenClaims>, AuthTokenError> {
+        token: &SessionToken,
+    ) -> Result<TokenData<SessionTokenClaims>, SessionTokenError> {
         token.get_data(&self.jwt_secret)
     }
 
-    pub fn auth_token_expired(&self, token: &AuthToken) -> Result<bool, AuthTokenError> {
+    pub fn auth_token_expired(&self, token: &SessionToken) -> Result<bool, SessionTokenError> {
         token.expired(&self.jwt_secret)
     }
 }

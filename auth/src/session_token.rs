@@ -6,43 +6,43 @@ use jsonwebtoken::{
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Clone, Serialize, Debug)]
-pub struct AuthToken(String);
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct SessionToken(String);
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct AuthTokenClaims {
+pub struct SessionTokenClaims {
     pub user_id: Uuid,
     pub session_id: Uuid,
     pub expiration: u64,
 }
 
 #[derive(Clone, Debug, thiserror::Error, PartialEq)]
-pub enum AuthTokenError {
-    #[error("Failed to encode auth token: {0}")]
+pub enum SessionTokenError {
+    #[error("Failed to encode session token: {0}")]
     EncodingError(jsonwebtoken::errors::Error),
 
-    #[error("Failed to decode auth token: {0}")]
+    #[error("Failed to decode session token: {0}")]
     DecodingError(jsonwebtoken::errors::Error),
 }
 
-impl AuthToken {
+impl SessionToken {
     pub(crate) fn get_data(
         &self,
         secret: &[u8],
-    ) -> Result<TokenData<AuthTokenClaims>, AuthTokenError> {
-        decode::<AuthTokenClaims>(
+    ) -> Result<TokenData<SessionTokenClaims>, SessionTokenError> {
+        decode::<SessionTokenClaims>(
             &self.0,
             &DecodingKey::from_secret(secret),
             &Validation::new(Algorithm::HS256),
         )
-        .map_err(AuthTokenError::DecodingError)
+        .map_err(SessionTokenError::DecodingError)
     }
 
     pub(crate) fn create(
         session_id: Uuid,
         user_id: Uuid,
         secret: &[u8],
-    ) -> Result<AuthToken, AuthTokenError> {
+    ) -> Result<SessionToken, SessionTokenError> {
         let expiration = (SystemTime::now() + Duration::from_days(3))
             .duration_since(UNIX_EPOCH)
             .expect("Future expiration duration should be after UNIX_EPOCH")
@@ -50,26 +50,26 @@ impl AuthToken {
 
         let token = encode(
             &Header::default(),
-            &AuthTokenClaims {
+            &SessionTokenClaims {
                 user_id,
                 session_id,
                 expiration,
             },
             &EncodingKey::from_secret(secret),
         )
-        .map_err(AuthTokenError::EncodingError)?;
+        .map_err(SessionTokenError::EncodingError)?;
 
-        Ok(AuthToken(token))
+        Ok(SessionToken(token))
     }
 
-    pub(crate) fn expired(&self, secret: &[u8]) -> Result<bool, AuthTokenError> {
+    pub(crate) fn expired(&self, secret: &[u8]) -> Result<bool, SessionTokenError> {
         Ok(SystemTime::now()
             < (UNIX_EPOCH + Duration::from_secs(self.get_data(secret)?.claims.expiration)))
     }
 }
 
-impl From<String> for AuthToken {
+impl From<String> for SessionToken {
     fn from(value: String) -> Self {
-        AuthToken(value)
+        SessionToken(value)
     }
 }

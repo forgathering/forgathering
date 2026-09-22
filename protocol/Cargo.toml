@@ -4,6 +4,14 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
+time.workspace = true
+log.workspace = true
+thiserror.workspace = true
+serde.workspace = true
+uuid.workspace = true
+base64.workspace = true
+auth = { path = "../auth" }
+ts-rs = { version = "12", features = ["serde-compat", "uuid-impl"] }
 
 [lints]
 workspace = true
