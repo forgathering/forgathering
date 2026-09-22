@@ -2,8 +2,8 @@
 
 export type Collection = { id: string, created_at: Date, modified_at: Date, owner_id: string, private: boolean, collaborators: Array<string>, name: string, important_blocks: Array<string>, blocks: Array<string>, };
 
-export type CollectionCollaboratorUpdate = { important_blocks: Array<string>, blocks: Array<string>, };
+export type CollectionCollaboratorUpdate = { id: string, important_blocks: Array<string>, blocks: Array<string>, };
 
 export type CollectionCreate = { name: string, private: boolean, };
 
-export type CollectionOwnerUpdate = { owner_id: string, private: boolean, collaborators: Array<string>, name: string, important_blocks: Array<string>, blocks: Array<string>, };
+export type CollectionOwnerUpdate = { id: string, owner_id: string, private: boolean, collaborators: Array<string>, name: string, important_blocks: Array<string>, blocks: Array<string>, };

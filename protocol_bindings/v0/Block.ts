@@ -2,6 +2,6 @@
 
 export type Block = { id: string, created_at: Date, modified_at: Date, markdown: string | null, link: string | null, image: string | null, };
 
-export type BlockCreate = { markdown: string | null, link: string | null, image: string | null, };
+export type BlockCreate = { id: string, markdown: string | null, link: string | null, image: string | null, };
 
-export type BlockUpdate = { markdown: string | null, link: string | null, image: string | null, };
+export type BlockUpdate = { id: string, markdown: string | null, link: string | null, image: string | null, };

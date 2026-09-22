@@ -32,6 +32,8 @@ pub struct CollectionCreate {
 #[derive(Serialize, Deserialize, Clone, Debug, ts_rs::TS)]
 #[ts(export, export_to = "v0/Collection.ts")]
 pub struct CollectionOwnerUpdate {
+    pub id: Uuid,
+
     pub owner_id: Uuid,
     pub private: bool,
     pub collaborators: Vec<Uuid>,
@@ -45,6 +47,8 @@ pub struct CollectionOwnerUpdate {
 #[derive(Serialize, Deserialize, Clone, Debug, ts_rs::TS)]
 #[ts(export, export_to = "v0/Collection.ts")]
 pub struct CollectionCollaboratorUpdate {
+    pub id: Uuid,
+
     pub important_blocks: Vec<Uuid>,
     pub blocks: Vec<Uuid>,
 }

@@ -27,6 +27,8 @@ pub struct Block {
 #[derive(Serialize, Deserialize, Clone, Debug, ts_rs::TS)]
 #[ts(export, export_to = "v0/Block.ts")]
 pub struct BlockCreate {
+    pub id: Uuid,
+
     pub markdown: Option<String>,
     pub link: Option<String>,
     #[serde(
@@ -40,6 +42,8 @@ pub struct BlockCreate {
 #[derive(Serialize, Deserialize, Clone, Debug, ts_rs::TS)]
 #[ts(export, export_to = "v0/Block.ts")]
 pub struct BlockUpdate {
+    pub id: Uuid,
+
     pub markdown: Option<String>,
     pub link: Option<String>,
     #[serde(
